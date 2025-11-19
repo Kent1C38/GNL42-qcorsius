@@ -94,8 +94,8 @@ char	*get_line(t_entry *entry)
 		line[i] = entry->save[i];
 	line[i] = entry->save[i];
 	i = -1;
-	while (entry->save[++i + line_len + 1] != '\0')
-		new_save[i] = entry->save[i + line_len + 1];
+	while (entry->save[++i + line_len] != '\0')
+		new_save[i] = entry->save[i + line_len];
 	free(entry->save);
 	entry->save = new_save;
 	return (line);
@@ -104,10 +104,17 @@ char	*get_line(t_entry *entry)
 char	*get_next_line(int fd)
 {
 	static t_entry	*repertory;
+	t_entry			*entry;
 
 	if (fd < 0)
 		return (NULL);
 	if (repertory == NULL)
 		repertory = new_entry(fd);
-	return (get_line(get_entry(repertory, fd)));
+	entry = get_entry(repertory, fd);
+	if (entry == NULL)
+	{
+		entry = new_entry(fd);
+		append_entry(&repertory, entry);
+	}
+	return (get_line(entry));
 }
