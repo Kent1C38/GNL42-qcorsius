@@ -42,6 +42,7 @@ char	*read_file(int fd, char *old_save)
 	read(fd, buff, BUFFER_SIZE);
 	if (buff == NULL || buff[0] == '\0')
 	{
+		free(buff);
 		if (old_save[0] == '\0')
 			return (NULL);
 		return (old_save);
@@ -58,22 +59,33 @@ char	*read_file(int fd, char *old_save)
 	return (new_save);
 }
 
+char	*read_from_save(char *rep, int *i)
+{
+	char	*line;
+
+	while (rep[*i])
+	{
+		if (rep[*i] == '\n')
+		{
+			line = ft_substr(rep, 0, *i + 1);
+			save(rep, *i + 1, rep);
+			return (line);
+		}
+		*i = *i + 1;
+	}
+	return (NULL);
+}
+
 char	*get_line(int fd, char *rep)
 {
 	char	*buff;
 	char	*line;
 	int		i;
 
-	i = -1;
-	while (rep[++i])
-	{
-		if (rep[i] == '\n')
-		{
-			line = ft_substr(rep, 0, i + 1);
-			save(rep, i + 1, rep);
-			return (line);
-		}
-	}
+	i = 0;
+	line = read_from_save(rep, &i);
+	if (line)
+		return (line);
 	buff = read_file(fd, rep);
 	if (buff == NULL)
 		return (NULL);
