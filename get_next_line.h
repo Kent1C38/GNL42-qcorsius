@@ -13,7 +13,12 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # define BUFFER_SIZE 1024
+# include <stddef.h>
 
-char		**get_repertory();
-static void	cleanup();
+
+size_t		ft_strlen(const char *str);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t nmemb, size_t size);
+char		*get_next_line(int fd);
+char		*ft_substr(const char *s, unsigned int start, size_t len);
 #endif

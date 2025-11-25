@@ -10,28 +10,73 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
 #include <stdlib.h>
+#include <limits.h>
+#include "get_next_line.h"
 
-char	**get_repertory()
+size_t	ft_strlen(const char *str)
 {
-	static char	*repertory[1024];
-	atexit(cleanup);
-	return (repertory);
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
 
-static void	cleanup()
+size_t	min(size_t t1, size_t t2)
 {
-	int		i;
-	char	**arr;
+	if (t1 > t2)
+		return (t2);
+	return (t1);
+}
 
-	arr = get_repertory();
+void	ft_bzero(void *s, size_t n)
+{
+	size_t			i;
+	unsigned char	*p;
+
+	if (s == NULL)
+		return ;
 	i = 0;
-	while (i < 1024)
+	p = s;
+	while (i < n)
+		p[i++] = (unsigned char) '\0';
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void				*array;
+	unsigned long long	malloc_size;
+
+	malloc_size = nmemb * size;
+	if (malloc_size > INT_MAX)
+		return (NULL);
+	array = malloc(malloc_size);
+	if (array != NULL)
+		ft_bzero(array, nmemb * size);
+	return (array);
+}
+
+char	*ft_substr(const char *s, unsigned int start, size_t len)
+{
+	int		sub_len;
+	int		i;
+	int		st;
+	char	*sub;
+
+	if (s == NULL)
+		return (NULL);
+	st = (int) min(start, ft_strlen(s));
+	sub_len = (int) min(ft_strlen(s) - st, len);
+	sub = ft_calloc(sub_len + 1, sizeof(char));
+	if (sub == NULL)
+		return (NULL);
+	i = 0;
+	while (s[st + i] != '\0' && i < sub_len)
 	{
-		if (arr[i])
-			free(arr[i]);
+		sub[i] = s[st + i];
 		i++;
 	}
+	return (sub);
 }
-
