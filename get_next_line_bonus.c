@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -30,32 +30,32 @@ void	save(char *rep, int start, char *buff)
 	free(buff_cp);
 }
 
-char	*read_file(int fd, char *old_save)
+char	*read_file(int fd, char *old)
 {
-	size_t	malloc_size;
 	char	*new_save;
-	char	*buff;
+	char	buff[BUFFER_SIZE + 1];
 	int		i;
 	int		j;
 
-	buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	ft_bzero(buff, sizeof(buff));
 	read(fd, buff, BUFFER_SIZE);
-	if (buff == NULL || buff[0] == '\0')
+	if (buff[0] == '\0')
 	{
-		free(buff);
-		if (old_save[0] == '\0')
+		if (old[0] == '\0')
+		{
+			free(old);
 			return (NULL);
-		return (old_save);
+		}
+		return (old);
 	}
-	malloc_size = ft_strlen(old_save) + ft_strlen(buff) + 1;
-	new_save = ft_calloc(malloc_size, sizeof(char));
+	new_save = ft_calloc(ft_strlen(old) + ft_strlen(buff) + 1, sizeof(char));
 	i = -1;
 	j = -1;
-	while (old_save[++i])
-		new_save[i] = old_save[i];
+	while (old[++i])
+		new_save[i] = old[i];
+	free(old);
 	while (buff[++j])
 		new_save[i + j] = buff[j];
-	free(buff);
 	return (new_save);
 }
 
@@ -86,15 +86,15 @@ char	*get_line(int fd, char *rep)
 	line = read_from_save(rep, &i);
 	if (line)
 		return (line);
-	buff = read_file(fd, rep);
+	buff = read_file(fd, ft_substr(rep, 0, BUFFER_SIZE));
 	if (buff == NULL)
 		return (NULL);
 	while (buff[i] != '\n')
 	{
 		if (buff[i] == '\0')
 			buff = read_file(fd, buff);
-		if (buff[i] == '\0')
-			return (buff);
+		if (buff[i] == '\0' || buff[i] == '\n')
+			break ;
 		i++;
 	}
 	line = ft_substr(buff, 0, i + 1);
