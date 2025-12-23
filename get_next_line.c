@@ -6,7 +6,7 @@
 /*   By: qcorsius <qcorsius@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:42:28 by qcorsius          #+#    #+#             */
-/*   Updated: 2025/12/08 11:25:49 by qcorsius         ###   ########lyon.fr   */
+/*   Updated: 2025/12/23 11:09:59 by qcorsius         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*raw;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = get_saved_line(saved);
 	if (line)
